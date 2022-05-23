@@ -3,6 +3,7 @@
 require_once 'civimobileactivitycategory.civix.php';
 
 // phpcs:disable
+use Civi\Api4\OptionGroup;
 use CRM_Civimobileactivitycategory_ExtensionUtil as E;
 
 // phpcs:enable
@@ -64,12 +65,12 @@ class CRM_CiviMobileActivityCategory_OptionValue_APIWrapper {
     if (!empty($apiRequest['params']['option_group_id'])) {
 
       // Get the Activity Type, Option Group ID
-      $ActivityTypeOptionGroupID = \Civi\Api4\OptionGroup::get()
-                                                         ->addSelect('id')
-                                                         ->addWhere('name', '=', 'activity_type')
-                                                         ->setLimit(1)
-                                                         ->execute()
-                                                         ->getArrayCopy();
+      $ActivityTypeOptionGroupID = OptionGroup::get()
+                                              ->addSelect('id')
+                                              ->addWhere('name', '=', 'activity_type')
+                                              ->setLimit(1)
+                                              ->execute()
+                                              ->getArrayCopy();
 
       // Check that the API call is for the Activity Type, Option Group
       if ($apiRequest['params']['option_group_id'] == $ActivityTypeOptionGroupID[0]['id']) {
@@ -133,37 +134,20 @@ function civimobileactivitycategory_civicrm_buildForm($formName, &$form) {
 
 function civimobileactivitycategory_setup_optiongroups() {
   // Check that the Activity Category Option exists
-  $optionGroups = \Civi\Api4\OptionGroup::get()
-                                        ->addSelect('id')
-                                        ->addWhere('name', '=', 'activity_category')
-                                        ->execute();
-  if ($optionGroups->rowCount == 0) {
-    \Civi\Api4\OptionGroup::create()
-                          ->addValue('name', 'activity_category')
-                          ->addValue('title', 'Activity Category')
-                          ->addValue('description', 'Activity Category')
-                          ->addValue('data_type', 'String')
-                          ->addValue('is_active', TRUE)
-                          ->execute();
-  }
+  $optionGroups = OptionGroup::save(FALSE)->addRecord([
+    'name'        => 'activity_category',
+    'title'       => 'Activity Category',
+    'description' => 'Activity Category',
+    'data_type'   => 'String',
+    'is_active'   => TRUE,
+  ])->setMatch(['name'])->execute();
 
-  // Check that the Activity Category, CiviMobile exists
-  $optionValues = \Civi\Api4\OptionValue::get()
-                                        ->addSelect('id')
-                                        ->addWhere('option_group_id:name', '=', 'activity_category')
-                                        ->addWhere('value', '=', 'CiviMobile')
-                                        ->setLimit(1)
-                                        ->execute();
-
-  // Create the CiviMobile Activity Category if it does not already exist
-  if ($optionValues->rowCount == 0) {
-    \Civi\Api4\OptionValue::create()
-                          ->addValue('option_group_id.name', 'activity_category')
-                          ->addValue('label', 'CiviMobile')
-                          ->addValue('value', 'CiviMobile')
-                          ->addValue('name', 'CiviMobile')
-                          ->execute();
-  }
+  $optionValues = OptionValue::save(FALSE)->addRecord([
+    'option_group_id.name' => 'activity_category',
+    'label'                => 'CiviMobile',
+    'value'                => 'CiviMobile',
+    'name'                 => 'CiviMobile',
+  ])->setMatch(['value'])->execute();
 }
 
 /**
