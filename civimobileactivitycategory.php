@@ -4,6 +4,7 @@ require_once 'civimobileactivitycategory.civix.php';
 
 // phpcs:disable
 use Civi\Api4\OptionGroup;
+use Civi\Api4\OptionValue;
 use CRM_Civimobileactivitycategory_ExtensionUtil as E;
 
 // phpcs:enable
