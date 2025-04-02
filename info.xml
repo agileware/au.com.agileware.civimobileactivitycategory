@@ -18,20 +18,20 @@
   <version>1.2</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.0</ver>
+    <ver>5.27</ver>
   </compatibility>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
   </classloader>
   <civix>
     <namespace>CRM/Civimobileactivitycategory</namespace>
-    <format>22.05.0</format>
+    <format>25.01.1</format>
     <angularModule>crmCivimobileactivitycategory</angularModule>
   </civix>
   <mixins>
     <mixin>setting-php@1.0.0</mixin>
   </mixins>
   <requires>
-  <ext>com.agiliway.civimobileapi</ext>
+    <ext>com.agiliway.civimobileapi</ext>
   </requires>
 </extension>
